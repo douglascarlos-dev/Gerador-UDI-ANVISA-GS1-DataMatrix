@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador UDI ANVISA (GS1 DataMatrix) - Portfólio Douglas Carlos</title>
+    <meta name="description" content="Gerador UDI ANVISA (GS1 DataMatrix)">
+    <meta name="author" content="Douglas Carlos">
+    <meta property="og:title" content="Gerador UDI ANVISA (GS1 DataMatrix)"/>
+    <meta property="og:description" content="Gerador UDI ANVISA (GS1 DataMatrix)"/>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.com/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- BWIP-JS for DataMatrix generation -->
+    <script src="https://cdn.jsdelivr.net/npm/bwip-js/dist/bwip-js-min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --accent: #0d9488;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);
+            --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header / Navbar */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .brand-icon {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .brand-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .author-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 0.4rem 0.8rem;
+            border-radius: 9999px;
+            border: 1px solid var(--border);
+        }
+
+        .author-badge a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .author-badge a:hover {
+            text-decoration: underline;
+        }
+
+        /* Layout Main */
+        .main-wrapper {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 992px) {
+            .main-wrapper {
+                grid-template-columns: 480px 1fr;
+                align-items: start;
+            }
+        }
+
+        /* Tool Card */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-header p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label .required {
+            color: #ef4444;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 0.875rem 0.75rem 2.5rem;
+            font-size: 0.95rem;
+            font-family: inherit;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: #fff;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s ease, transform 0.1s ease;
+            margin-top: 0.5rem;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        /* Result Area */
+        .result-box {
+            margin-top: 1.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: none;
+        }
+
+        .result-box.active {
+            display: block;
+        }
+
+        .barcode-container {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .data-display {
+            background: var(--bg);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .data-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .data-label {
+            color: var(--text-muted);
+        }
+
+        .data-value {
+            font-weight: 600;
+            color: var(--text-main);
+            word-break: break-all;
+        }
+
+        /* Documentation Area */
+        .doc-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .doc-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+        }
+
+        .doc-card h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .doc-card h2 i {
+            color: var(--primary);
+        }
+
+        .doc-card p {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        tr:hover td {
+            background: var(--primary-light);
+        }
+
+        /* Badges & Tech Tags */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tech-item {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .tech-item h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--primary-dark);
+        }
+
+        .tech-item p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .features-list, .evolution-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .features-list li, .evolution-list li {
+            font-size: 0.9rem;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features-list li i {
+            color: var(--accent);
+        }
+
+        .evolution-list li i {
+            color: var(--primary);
+        }
+
+        /* Code snippet box */
+        .code-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Toast Alert Customization */
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                <span class="brand-title">UDI ANVISA Generator</span>
+            </a>
+            <div class="author-badge">
+                <span>Desenvolvido por</span>
+                <a href="mailto:contato@douglascarlos.dev">Douglas Carlos</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        
+        <!-- Generator Card -->
+        <section class="card">
+            <div class="card-header">
+                <h1>Gerador GS1 DataMatrix</h1>
+                <p>Gere códigos UDI para dispositivos médicos em conformidade com as exigências da ANVISA e padrões GS1.</p>
+            </div>
+
+            <div id="alert-box" class="alert-error">
+                <i class="fa-solid fa-circle-exclamation"></i> <span id="alert-msg"></span>
+            </div>
+
+            <form id="udi-form" onsubmit="event.preventDefault(); gerar();">
+                <div class="form-group">
+                    <label for="gtin">GTIN-14 <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-barcode"></i>
+                        <input id="gtin" class="form-control" type="text" maxlength="14" inputmode="numeric" pattern="[0-9]{14}" placeholder="Ex: 07891234567890" required>
+                    </div>
+                    <div class="form-hint">Código global de item comercial (14 dígitos numéricos com checksum válido).</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="validade">Data de Validade <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <input id="validade" class="form-control" type="date" required>
+                    </div>
+                    <div class="form-hint">Sera formatada automaticamente para o padrao YYMMDD (AI 17).</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lote">Número do Lote <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <input id="lote" class="form-control" type="text" maxlength="20" placeholder="Ex: LOTE1234" required>
+                    </div>
+                    <div class="form-hint">Identificador do lote de fabricação (AI 10).</div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar GS1 DataMatrix
+                </button>
+            </form>
+
+            <!-- Result Section -->
+            <div id="resultado" class="result-box">
+                <div class="barcode-container">
+                    <canvas id="barcode"></canvas>
+                </div>
+                <div class="data-display">
+                    <div class="data-row">
+                        <span class="data-label">GTIN-14:</span>
+                        <span id="res-gtin" class="data-value">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">String GS1:</span>
+                        <span id="res-gs1" class="data-value">-</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Documentation & Info -->
+        <div class="doc-container">
+            
+            <article class="doc-card">
+                <h2><i class="fa-solid fa-circle-info"></i> Sobre o Projeto</h2>
+                <p>
+                    O <strong>Gerador de UDI ANVISA</strong> é uma solução web desenvolvida para facilitar a criação de códigos GS1 DataMatrix destinados à Identificação Única de Dispositivos Médicos (UDI), atendendo às normativas da ANVISA e aos padrões globais GS1.
+                </p>
+                <p>
+                    Projetado para operar inteiramente <i>client-side</i>, a ferramenta garante alto desempenho, segurança e praticidade para fabricantes, distribuidores e profissionais de rastreabilidade do setor da saúde.
+                </p>
+
+                <h3 style="font-size:1rem; margin-top:1.5rem; margin-bottom:0.5rem; color:var(--text-main);">Estrutura do Código Gerado</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>AI</th>
+                                <th>Descrição</th>
+                                <th>Formato</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>(01)</strong></td>
+                                <td>GTIN-14</td>
+                                <td>14 Números</td>
+                            </tr>
+                            <tr>
+                                <td><strong>(17)</strong></td>
+                                <td>Data de Validade</td>
+                                <td>YYMMDD</td>
+                            </tr>
+                            <tr>
+                                <td><strong>(10)</strong></td>
+                                <td>Lote de Fabricação</td>
+                                <td>Alfanumérico (até 20)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="code-box">
+                    Exemplo GS1: (01)07891234567890(17)271231(10)LOTE123
+                </div>
+            </article>
+
+            <article class="doc-card">
+                <h2><i class="fa-solid fa-gears"></i> Funcionalidades & Arquitetura</h2>
+                
+                <ul class="features-list">
+                    <li><i class="fa-solid fa-check-circle"></i> Validação nativa de checksum GTIN-14</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Formatação automática de datas GS1</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Inserção do caractere especial FNC1</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Geração local via BWIP-JS</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Renderização em Canvas de alta precisão</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Layout 100% responsivo</li>
+                </ul>
+
+                <h3 style="font-size:1rem; margin-top:1.5rem; margin-bottom:0.5rem; color:var(--text-main);">Tecnologias Utilizadas</h3>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <h4>HTML5 & CSS3</h4>
+                        <p>Interface estruturada com CSS Grid, Flexbox e Design System baseado em variáveis CSS.</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Vanilla JS (ES6+)</h4>
+                        <p>Lógica pura sem frameworks, garantindo leveza, rápida execução e zero dependências pesadas.</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>BWIP-JS</h4>
+                        <p>Biblioteca para compilação exata dos padrões simbólicos do GS1 DataMatrix (ECC200).</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="doc-card">
+                <h2><i class="fa-solid fa-chart-line"></i> Roadmap & Evoluções Futuras</h2>
+                <ul class="evolution-list">
+                    <li><i class="fa-solid fa-arrow-right-long"></i> Suporte ao AI (21) - Número de Série</li>
+                    <li><i class="fa-solid fa-arrow-right-long"></i> Suporte ao AI (11) - Data de Fabricação</li>
+                    <li><i class="fa-solid fa-arrow-right-long"></i> Exportação em PNG, SVG e PDF</li>
+                    <li><i class="fa-solid fa-arrow-right-long"></i> Impressão direta de etiquetas térmicas (ZPL)</li>
+                    <li><i class="fa-solid fa-arrow-right-long"></i> Integração REST API para sistemas ERP/WMS</li>
+                </ul>
+            </article>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 <strong>Douglas Carlos</strong>. Projeto disponibilizado para fins de estudo e integração técnica.</p>
+            <p style="margin-top:0.4rem;">Contato: <a href="mailto:contato@douglascarlos.dev">contato@douglascarlos.dev</a></p>
+        </div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script>
+        function showAlert(message) {
+            const alertBox = document.getElementById("alert-box");
+            const alertMsg = document.getElementById("alert-msg");
+            alertMsg.innerText = message;
+            alertBox.style.display = "block";
+        }
+
+        function clearAlert() {
+            const alertBox = document.getElementById("alert-box");
+            alertBox.style.display = "none";
+        }
+
+        function validarGTIN(gtin) {
+            if (!/^\d{14}$/.test(gtin)) return false;
+
+            let soma = 0;
+            for (let i = 0; i < 13; i++) {
+                let digito = parseInt(gtin[i]);
+                soma += digito * ((i % 2 === 0) ? 3 : 1);
+            }
+
+            let dvCalculado = (10 - (soma % 10)) % 10;
+            return dvCalculado === parseInt(gtin[13]);
+        }
+
+        function gerar() {
+            clearAlert();
+
+            let gtin = document.getElementById("gtin").value.trim();
+            let validade = document.getElementById("validade").value;
+            let lote = document.getElementById("lote").value.trim();
+
+            if (!validarGTIN(gtin)) {
+                showAlert("GTIN-14 inválido! Verifique o número e o dígito verificador.");
+                return;
+            }
+
+            if (!validade) {
+                showAlert("Por favor, selecione uma data de validade.");
+                return;
+            }
+
+            if (!lote) {
+                showAlert("Por favor, preencha o campo de Lote.");
+                return;
+            }
+
+            let partes = validade.split("-");
+            let yy = partes[0].substring(2);
+            let mm = partes[1];
+            let dd = partes[2];
+
+            let gs1 = "(01)" + gtin + "(17)" + yy + mm + dd + "(10)" + lote;
+
+            try {
+                bwipjs.toCanvas("barcode", {
+                    bcid: "gs1datamatrix",
+                    text: gs1,
+                    scale: 5,
+                    includetext: false
+                });
+
+                document.getElementById("res-gtin").innerText = gtin;
+                document.getElementById("res-gs1").innerText = gs1;
+                document.getElementById("resultado").classList.add("active");
+
+            } catch (e) {
+                showAlert("Erro ao gerar DataMatrix: " + e);
+            }
+        }
+    </script>
+</body>
+</html>
