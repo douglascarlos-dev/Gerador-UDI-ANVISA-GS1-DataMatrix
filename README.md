@@ -19,5 +19,5 @@ Aplicativo Web para gerar códigos GS1 DataMatrix (ECC200) voltados à Identific
 
 ```shell
 # Antes de tudo, clone o projeto
-$ git clone https://github.com/douglascarlos-dev/gerador-udi-anvisa
+$ git clone https://github.com/douglascarlos-dev/Gerador-UDI-ANVISA-GS1-DataMatrix
 ```
