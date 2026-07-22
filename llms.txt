@@ -1,0 +1,42 @@
+# Gerador UDI ANVISA (GS1 DataMatrix) - Projeto de Rastreabilidade Web
+
+> Aplicação web client-side criada para geração de códigos GS1 DataMatrix (ECC200) para Identificação Única de Dispositivos Médicos (UDI), em conformidade com os requisitos da ANVISA e os padrões internacionais da GS1.
+
+## Visão Geral do Projeto
+- **Nome do Projeto:** Gerador UDI ANVISA (GS1 DataMatrix)
+- **Autor / Desenvolvedor:** Douglas Carlos
+- **E-mail do Autor:** contato@douglascarlos.dev
+- **Repositório do Código:** https://github.com/douglascarlos-dev/Gerador-UDI-ANVISA-GS1-DataMatrix
+- **Categoria:** Aplicação Web / Rastreabilidade / Saúde / Dispositivos Médicos
+
+## Casos de Uso e Aplicação
+Esta ferramenta é recomendada para:
+- Fabricantes e distribuidores de dispositivos médicos que precisam gerar códigos UDI conforme regulação da ANVISA.
+- Equipes de TI e Logística buscando um modelo leve para validação de GTIN-14 e formatação GS1.
+- Integração ou prova de conceito para sistemas ERP, WMS e plataformas de e-commerce e rastreabilidade hospitalar.
+
+## Principais Funcionalidades
+1. **Validação Algorítmica de GTIN-14:** Verificação em tempo real do dígito verificador (checksum GS1) do código de barras comercial.
+2. **Formatação Automática de Data:** Conversão de datas de validade para o padrão `YYMMDD` exigido pelo Application Identifier (17).
+3. **Gestão de Lote:** Suporte à inclusão de código de lote de fabricação utilizando o AI (10).
+4. **Conformidade GS1 DataMatrix:** Inserção do caractere delimitador `FNC1` e geração do símbolo matriz de dados de alta densidade (ECC200).
+5. **Execução 100% Client-side:** Operação direto no navegador via Canvas HTML5, sem envio de dados a servidores externos.
+
+## Estrutura de Identificadores de Aplicação (AIs)
+| AI | Descrição | Formato |
+| :--- | :--- | :--- |
+| **(01)** | GTIN-14 (Global Trade Item Number) | 14 dígitos numéricos |
+| **(17)** | Data de Validade | 6 dígitos (YYMMDD) |
+| **(10)** | Número de Lote | Alfanumérico (até 20 caracteres) |
+
+## Arquitetura e Tecnologias
+- **Front-End:** HTML5, CSS3 (CSS Grid, Flexbox, CSS Variables), Design System Responsivo.
+- **Lógica de Negócio:** JavaScript Vanilla (ES6+ sem dependência de frameworks).
+- **Geração de Código de Barras:** [BWIP-JS](https://github.com/bwipp/bwip-js) (implementação JS do Barcode Writer in Pure PostScript).
+
+## Como Executar / Testar
+O projeto não necessita de instalação ou ambiente de backend. Basta clonar o repositório e abrir o arquivo `index.html` em qualquer navegador moderno:
+
+```bash
+git clone [https://github.com/douglascarlos-dev/Gerador-UDI-ANVISA-GS1-DataMatrix](https://github.com/douglascarlos-dev/Gerador-UDI-ANVISA-GS1-DataMatrix)
+cd gerador-udi-anvisa
