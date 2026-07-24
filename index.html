@@ -455,12 +455,19 @@
             margin-bottom: 1rem;
             display: none;
         }
+        
+        /* Regra para a hora da impressão */
+        @media print {
+        .nao-imprimir {
+            display: none !important;
+        }
+        }
     </style>
 </head>
 <body>
 
     <!-- Header -->
-    <header>
+    <header class="nao-imprimir">
         <div class="header-container">
             <a href="#" class="brand">
                 <div class="brand-icon">
@@ -470,7 +477,7 @@
             </a>
             <div class="author-badge">
                 <span>Desenvolvido por</span>
-                <a href="mailto:contato@douglascarlos.dev">Douglas Carlos</a>
+                <a href="https://douglascarlos.dev/">Douglas Carlos</a>
             </div>
         </div>
     </header>
