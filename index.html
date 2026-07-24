@@ -12,7 +12,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.com/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- BWIP-JS for DataMatrix generation -->
@@ -174,6 +173,13 @@
 
         .form-group label .required {
             color: #ef4444;
+        }
+
+        .form-group label .optional {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-left: 0.25rem;
         }
 
         .input-wrapper {
@@ -499,7 +505,7 @@
                         <i class="fa-solid fa-calendar-days"></i>
                         <input id="validade" class="form-control" type="date" required>
                     </div>
-                    <div class="form-hint">Sera formatada automaticamente para o padrao YYMMDD (AI 17).</div>
+                    <div class="form-hint">Será formatada automaticamente para o padrão YYMMDD (AI 17).</div>
                 </div>
 
                 <div class="form-group">
@@ -509,6 +515,24 @@
                         <input id="lote" class="form-control" type="text" maxlength="20" placeholder="Ex: LOTE1234" required>
                     </div>
                     <div class="form-hint">Identificador do lote de fabricação (AI 10).</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fabricacao">Data de Fabricação <span class="optional">(Opcional)</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-industry"></i>
+                        <input id="fabricacao" class="form-control" type="date">
+                    </div>
+                    <div class="form-hint">Data de fabricação do lote/item (AI 11).</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="serie">Número de Série <span class="optional">(Opcional)</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-hashtag"></i>
+                        <input id="serie" class="form-control" type="text" maxlength="20" placeholder="Ex: SN123456">
+                    </div>
+                    <div class="form-hint">Identificador do número de série do dispositivo (AI 21).</div>
                 </div>
 
                 <button type="submit" class="btn-submit">
@@ -554,6 +578,7 @@
                                 <th>AI</th>
                                 <th>Descrição</th>
                                 <th>Formato</th>
+                                <th>Obrigatório</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -561,23 +586,38 @@
                                 <td><strong>(01)</strong></td>
                                 <td>GTIN-14</td>
                                 <td>14 Números</td>
+                                <td>Sim</td>
                             </tr>
                             <tr>
                                 <td><strong>(17)</strong></td>
                                 <td>Data de Validade</td>
                                 <td>YYMMDD</td>
+                                <td>Sim</td>
                             </tr>
                             <tr>
                                 <td><strong>(10)</strong></td>
                                 <td>Lote de Fabricação</td>
                                 <td>Alfanumérico (até 20)</td>
+                                <td>Sim</td>
+                            </tr>
+                            <tr>
+                                <td><strong>(11)</strong></td>
+                                <td>Data de Fabricação</td>
+                                <td>YYMMDD</td>
+                                <td>Não</td>
+                            </tr>
+                            <tr>
+                                <td><strong>(21)</strong></td>
+                                <td>Número de Série</td>
+                                <td>Alfanumérico (até 20)</td>
+                                <td>Não</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="code-box">
-                    Exemplo GS1: (01)07891234567890(17)271231(10)LOTE123
+                    Exemplo GS1 Completo: (01)07891234567890(17)271231(10)LOTE123(11)260724(21)SN123456
                 </div>
             </article>
 
@@ -587,6 +627,7 @@
                 <ul class="features-list">
                     <li><i class="fa-solid fa-check-circle"></i> Validação nativa de checksum GTIN-14</li>
                     <li><i class="fa-solid fa-check-circle"></i> Formatação automática de datas GS1</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Suporte a AI (11) Fabricação e AI (21) Série</li>
                     <li><i class="fa-solid fa-check-circle"></i> Inserção do caractere especial FNC1</li>
                     <li><i class="fa-solid fa-check-circle"></i> Geração local via BWIP-JS</li>
                     <li><i class="fa-solid fa-check-circle"></i> Renderização em Canvas de alta precisão</li>
@@ -613,8 +654,8 @@
             <article class="doc-card">
                 <h2><i class="fa-solid fa-chart-line"></i> Roadmap & Evoluções Futuras</h2>
                 <ul class="evolution-list">
-                    <li><i class="fa-solid fa-arrow-right-long"></i> Suporte ao AI (21) - Número de Série</li>
-                    <li><i class="fa-solid fa-arrow-right-long"></i> Suporte ao AI (11) - Data de Fabricação</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--accent);"></i> Suporte ao AI (21) - Número de Série</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--accent);"></i> Suporte ao AI (11) - Data de Fabricação</li>
                     <li><i class="fa-solid fa-arrow-right-long"></i> Exportação em PNG, SVG e PDF</li>
                     <li><i class="fa-solid fa-arrow-right-long"></i> Impressão direta de etiquetas térmicas (ZPL)</li>
                     <li><i class="fa-solid fa-arrow-right-long"></i> Integração REST API para sistemas ERP/WMS</li>
@@ -660,12 +701,23 @@
             return dvCalculado === parseInt(gtin[13]);
         }
 
+        function formatarDataGS1(dataString) {
+            if (!dataString) return "";
+            let partes = dataString.split("-");
+            let yy = partes[0].substring(2);
+            let mm = partes[1];
+            let dd = partes[2];
+            return yy + mm + dd;
+        }
+
         function gerar() {
             clearAlert();
 
             let gtin = document.getElementById("gtin").value.trim();
             let validade = document.getElementById("validade").value;
             let lote = document.getElementById("lote").value.trim();
+            let fabricacao = document.getElementById("fabricacao").value;
+            let serie = document.getElementById("serie").value.trim();
 
             if (!validarGTIN(gtin)) {
                 showAlert("GTIN-14 inválido! Verifique o número e o dígito verificador.");
@@ -682,12 +734,18 @@
                 return;
             }
 
-            let partes = validade.split("-");
-            let yy = partes[0].substring(2);
-            let mm = partes[1];
-            let dd = partes[2];
+            // AIs Obrigatórios: GTIN (01), Validade (17), Lote (10)
+            let gs1 = "(01)" + gtin + "(17)" + formatarDataGS1(validade) + "(10)" + lote;
 
-            let gs1 = "(01)" + gtin + "(17)" + yy + mm + dd + "(10)" + lote;
+            // AI Opcional: Data de Fabricação (11)
+            if (fabricacao) {
+                gs1 += "(11)" + formatarDataGS1(fabricacao);
+            }
+
+            // AI Opcional: Número de Série (21)
+            if (serie) {
+                gs1 += "(21)" + serie;
+            }
 
             try {
                 bwipjs.toCanvas("barcode", {
