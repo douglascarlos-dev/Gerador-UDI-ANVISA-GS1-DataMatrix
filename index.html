@@ -245,6 +245,28 @@
             transform: scale(0.99);
         }
 
+        .btn-secondary {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s ease;
+            margin-top: 1rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-secondary:hover {
+            background: #334155;
+        }
+
         /* Result Area */
         .result-box {
             margin-top: 1.75rem;
@@ -263,6 +285,7 @@
             border-radius: var(--radius-md);
             border: 1px dashed var(--border);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             margin-bottom: 1rem;
@@ -279,9 +302,9 @@
 
         .data-row {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.5rem;
+            flex-direction: column;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
@@ -293,12 +316,26 @@
 
         .data-label {
             color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .data-value {
             font-weight: 600;
             color: var(--text-main);
             word-break: break-all;
+        }
+
+        .url-link {
+            color: var(--primary);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .url-link:hover {
+            text-decoration: underline;
         }
 
         /* Documentation Area */
@@ -458,9 +495,9 @@
         
         /* Regra para a hora da impressão */
         @media print {
-        .nao-imprimir {
-            display: none !important;
-        }
+            .nao-imprimir {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -497,49 +534,74 @@
             </div>
 
             <form id="udi-form" onsubmit="event.preventDefault(); gerar();">
+                <!-- AI 01 -->
                 <div class="form-group">
-                    <label for="gtin">GTIN-14 <span class="required">*</span></label>
+                    <label for="ai01">GTIN-14 (AI 01) <span class="required">*</span></label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-barcode"></i>
-                        <input id="gtin" class="form-control" type="text" maxlength="14" inputmode="numeric" pattern="[0-9]{14}" placeholder="Ex: 07891234567890" required>
+                        <input id="ai01" class="form-control" type="text" maxlength="14" inputmode="numeric" pattern="[0-9]{14}" placeholder="Ex: 07891234567890" required>
                     </div>
                     <div class="form-hint">Código global de item comercial (14 dígitos numéricos com checksum válido).</div>
                 </div>
 
+                <!-- AI 17 -->
                 <div class="form-group">
-                    <label for="validade">Data de Validade <span class="required">*</span></label>
+                    <label for="ai17">Data de Validade (AI 17) <span class="required">*</span></label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-calendar-days"></i>
-                        <input id="validade" class="form-control" type="date" required>
+                        <input id="ai17" class="form-control" type="date" required>
                     </div>
-                    <div class="form-hint">Será formatada automaticamente para o padrão YYMMDD (AI 17).</div>
+                    <div class="form-hint">Será formatada automaticamente para o padrão YYMMDD.</div>
                 </div>
 
+                <!-- AI 10 -->
                 <div class="form-group">
-                    <label for="lote">Número do Lote <span class="required">*</span></label>
+                    <label for="ai10">Número do Lote (AI 10) <span class="required">*</span></label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-boxes-stacked"></i>
-                        <input id="lote" class="form-control" type="text" maxlength="20" placeholder="Ex: LOTE1234" required>
+                        <input id="ai10" class="form-control" type="text" maxlength="20" placeholder="Ex: LOTE1234" required>
                     </div>
-                    <div class="form-hint">Identificador do lote de fabricação (AI 10).</div>
+                    <div class="form-hint">Identificador do lote de fabricação.</div>
                 </div>
 
+                <!-- AI 90 -->
                 <div class="form-group">
-                    <label for="fabricacao">Data de Fabricação <span class="optional">(Opcional)</span></label>
+                    <label for="ai90">Informação de Usuário / Registro (AI 90) <span class="optional">(Opcional)</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-file-signature"></i>
+                        <input id="ai90" class="form-control" type="text" maxlength="30" placeholder="Ex: REG123456">
+                    </div>
+                    <div class="form-hint">Informações mutuamente acordadas ou registros (até 30 caracteres).</div>
+                </div>
+
+                <!-- AI 240 -->
+                <div class="form-group">
+                    <label for="ai240">Identificação Adicional (AI 240) <span class="optional">(Opcional)</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-id-card"></i>
+                        <input id="ai240" class="form-control" type="text" maxlength="30" placeholder="Ex: REF9876">
+                    </div>
+                    <div class="form-hint">Identificação adicional do produto (até 30 caracteres).</div>
+                </div>
+
+                <!-- AI 11 -->
+                <div class="form-group">
+                    <label for="ai11">Data de Fabricação (AI 11) <span class="optional">(Opcional)</span></label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-industry"></i>
-                        <input id="fabricacao" class="form-control" type="date">
+                        <input id="ai11" class="form-control" type="date">
                     </div>
-                    <div class="form-hint">Data de fabricação do lote/item (AI 11).</div>
+                    <div class="form-hint">Data de fabricação do lote/item (YYMMDD).</div>
                 </div>
 
+                <!-- AI 21 -->
                 <div class="form-group">
-                    <label for="serie">Número de Série <span class="optional">(Opcional)</span></label>
+                    <label for="ai21">Número de Série (AI 21) <span class="optional">(Opcional)</span></label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-hashtag"></i>
-                        <input id="serie" class="form-control" type="text" maxlength="20" placeholder="Ex: SN123456">
+                        <input id="ai21" class="form-control" type="text" maxlength="20" placeholder="Ex: SN123456">
                     </div>
-                    <div class="form-hint">Identificador do número de série do dispositivo (AI 21).</div>
+                    <div class="form-hint">Identificador do número de série do dispositivo.</div>
                 </div>
 
                 <button type="submit" class="btn-submit">
@@ -551,6 +613,9 @@
             <div id="resultado" class="result-box">
                 <div class="barcode-container">
                     <canvas id="barcode"></canvas>
+                    <button type="button" class="btn-secondary" onclick="baixarPNG()">
+                        <i class="fa-solid fa-download"></i> Baixar PNG
+                    </button>
                 </div>
                 <div class="data-display">
                     <div class="data-row">
@@ -560,6 +625,10 @@
                     <div class="data-row">
                         <span class="data-label">String GS1:</span>
                         <span id="res-gs1" class="data-value">-</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Link com Parâmetros:</span>
+                        <a id="res-url" href="#" target="_blank" class="url-link">-</a>
                     </div>
                 </div>
             </div>
@@ -577,7 +646,7 @@
                     Projetado para operar inteiramente <i>client-side</i>, a ferramenta garante alto desempenho, segurança e praticidade para fabricantes, distribuidores e profissionais de rastreabilidade do setor da saúde.
                 </p>
 
-                <h3 style="font-size:1rem; margin-top:1.5rem; margin-bottom:0.5rem; color:var(--text-main);">Estrutura do Código Gerado</h3>
+                <h3 style="font-size:1rem; margin-top:1.5rem; margin-bottom:0.5rem; color:var(--text-main);">Estrutura do Código Gerado (Ordem dos AIs)</h3>
                 <div class="table-responsive">
                     <table>
                         <thead>
@@ -608,6 +677,18 @@
                                 <td>Sim</td>
                             </tr>
                             <tr>
+                                <td><strong>(90)</strong></td>
+                                <td>Informação do Usuário / Registro</td>
+                                <td>Alfanumérico (até 30)</td>
+                                <td>Não</td>
+                            </tr>
+                            <tr>
+                                <td><strong>(240)</strong></td>
+                                <td>Identificação Adicional</td>
+                                <td>Alfanumérico (até 30)</td>
+                                <td>Não</td>
+                            </tr>
+                            <tr>
                                 <td><strong>(11)</strong></td>
                                 <td>Data de Fabricação</td>
                                 <td>YYMMDD</td>
@@ -624,7 +705,7 @@
                 </div>
 
                 <div class="code-box">
-                    Exemplo GS1 Completo: (01)07891234567890(17)271231(10)LOTE123(11)260724(21)SN123456
+                    Exemplo GS1 Completo: (01)07891234567890(17)271231(10)LOTE123(90)REG123(240)REF987(11)260724(21)SN123456
                 </div>
             </article>
 
@@ -633,12 +714,12 @@
                 
                 <ul class="features-list">
                     <li><i class="fa-solid fa-check-circle"></i> Validação nativa de checksum GTIN-14</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Suporte a AI (01), (17), (10), (90), (240), (11) e (21)</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Leitura e preenchimento via parâmetros de URL</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Download do código gerado em formato PNG</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Geração de link parametrizado compartilhável</li>
                     <li><i class="fa-solid fa-check-circle"></i> Formatação automática de datas GS1</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Suporte a AI (11) Fabricação e AI (21) Série</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Inserção do caractere especial FNC1</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Geração local via BWIP-JS</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Renderização em Canvas de alta precisão</li>
-                    <li><i class="fa-solid fa-check-circle"></i> Layout 100% responsivo</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Geração local via BWIP-JS em Canvas</li>
                 </ul>
 
                 <h3 style="font-size:1rem; margin-top:1.5rem; margin-bottom:0.5rem; color:var(--text-main);">Tecnologias Utilizadas</h3>
@@ -661,9 +742,10 @@
             <article class="doc-card">
                 <h2><i class="fa-solid fa-chart-line"></i> Roadmap & Evoluções Futuras</h2>
                 <ul class="evolution-list">
-                    <li><i class="fa-solid fa-check" style="color:var(--accent);"></i> Suporte ao AI (21) - Número de Série</li>
-                    <li><i class="fa-solid fa-check" style="color:var(--accent);"></i> Suporte ao AI (11) - Data de Fabricação</li>
-                    <li><i class="fa-solid fa-arrow-right-long"></i> Exportação em PNG, SVG e PDF</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--accent);"></i> Suporte aos AIs (21), (11), (90) e (240)</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--accent);"></i> Exportação em PNG e URL compartilhável</li>
+                    <li><i class="fa-solid fa-check" style="color:var(--accent);"></i> Preenchimento automático por Parâmetros da URL</li>
+                    <li><i class="fa-solid fa-arrow-right-long"></i> Exportação em SVG e PDF</li>
                     <li><i class="fa-solid fa-arrow-right-long"></i> Impressão direta de etiquetas térmicas (ZPL)</li>
                     <li><i class="fa-solid fa-arrow-right-long"></i> Integração REST API para sistemas ERP/WMS</li>
                 </ul>
@@ -711,47 +793,65 @@
         function formatarDataGS1(dataString) {
             if (!dataString) return "";
             let partes = dataString.split("-");
+            if (partes.length !== 3) return "";
             let yy = partes[0].substring(2);
             let mm = partes[1];
             let dd = partes[2];
             return yy + mm + dd;
         }
 
+        function converterDataParaInput(yymmdd) {
+            if (!yymmdd || yymmdd.length !== 6) return "";
+            let yy = yymmdd.substring(0, 2);
+            let mm = yymmdd.substring(2, 4);
+            let dd = yymmdd.substring(4, 6);
+            let ano = parseInt(yy, 10) > 50 ? "19" + yy : "20" + yy;
+            return `${ano}-${mm}-${dd}`;
+        }
+
         function gerar() {
             clearAlert();
 
-            let gtin = document.getElementById("gtin").value.trim();
-            let validade = document.getElementById("validade").value;
-            let lote = document.getElementById("lote").value.trim();
-            let fabricacao = document.getElementById("fabricacao").value;
-            let serie = document.getElementById("serie").value.trim();
+            let ai01 = document.getElementById("ai01").value.trim();
+            let ai17 = document.getElementById("ai17").value;
+            let ai10 = document.getElementById("ai10").value.trim();
+            let ai90 = document.getElementById("ai90").value.trim();
+            let ai240 = document.getElementById("ai240").value.trim();
+            let ai11 = document.getElementById("ai11").value;
+            let ai21 = document.getElementById("ai21").value.trim();
 
-            if (!validarGTIN(gtin)) {
-                showAlert("GTIN-14 inválido! Verifique o número e o dígito verificador.");
+            if (!validarGTIN(ai01)) {
+                showAlert("GTIN-14 (AI 01) inválido! Verifique o número e o dígito verificador.");
                 return;
             }
 
-            if (!validade) {
-                showAlert("Por favor, selecione uma data de validade.");
+            if (!ai17) {
+                showAlert("Por favor, selecione uma Data de Validade (AI 17).");
                 return;
             }
 
-            if (!lote) {
-                showAlert("Por favor, preencha o campo de Lote.");
+            if (!ai10) {
+                showAlert("Por favor, preencha o campo de Número do Lote (AI 10).");
                 return;
             }
 
-            // AIs Obrigatórios: GTIN (01), Validade (17), Lote (10)
-            let gs1 = "(01)" + gtin + "(17)" + formatarDataGS1(validade) + "(10)" + lote;
+            // AIs na Ordem Requerida: 01, 17, 10, 90, 240, 11 e 21
+            let gs1 = "(01)" + ai01 + "(17)" + formatarDataGS1(ai17) + "(10)" + ai10;
 
-            // AI Opcional: Data de Fabricação (11)
-            if (fabricacao) {
-                gs1 += "(11)" + formatarDataGS1(fabricacao);
+            if (ai90) {
+                gs1 += "(90)" + ai90;
             }
 
-            // AI Opcional: Número de Série (21)
-            if (serie) {
-                gs1 += "(21)" + serie;
+            if (ai240) {
+                gs1 += "(240)" + ai240;
+            }
+
+            if (ai11) {
+                gs1 += "(11)" + formatarDataGS1(ai11);
+            }
+
+            if (ai21) {
+                gs1 += "(21)" + ai21;
             }
 
             try {
@@ -762,14 +862,85 @@
                     includetext: false
                 });
 
-                document.getElementById("res-gtin").innerText = gtin;
+                document.getElementById("res-gtin").innerText = ai01;
                 document.getElementById("res-gs1").innerText = gs1;
+
+                // Gerar URL com parâmetros
+                let urlParams = new URLSearchParams();
+                urlParams.set("ai01", ai01);
+                urlParams.set("ai17", formatarDataGS1(ai17));
+                urlParams.set("ai10", ai10);
+                if (ai90) urlParams.set("ai90", ai90);
+                if (ai240) urlParams.set("ai240", ai240);
+                if (ai11) urlParams.set("ai11", formatarDataGS1(ai11));
+                if (ai21) urlParams.set("ai21", ai21);
+
+                let pageUrl = window.location.origin + window.location.pathname + "?" + urlParams.toString();
+                let linkElem = document.getElementById("res-url");
+                linkElem.href = pageUrl;
+                linkElem.innerText = pageUrl;
+
                 document.getElementById("resultado").classList.add("active");
 
             } catch (e) {
                 showAlert("Erro ao gerar DataMatrix: " + e);
             }
         }
+
+        function baixarPNG() {
+            let canvas = document.getElementById("barcode");
+            if (!canvas) return;
+
+            let imageURI = canvas.toDataURL("image/png");
+            let link = document.createElement("a");
+            link.download = `datamatrix-udi-${document.getElementById("ai01").value || "barcode"}.png`;
+            link.href = imageURI;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Leitura automática dos parâmetros da URL ao carregar a página
+        window.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            let hasParam = false;
+
+            if (params.has("ai01")) {
+                document.getElementById("ai01").value = params.get("ai01");
+                hasParam = true;
+            }
+            if (params.has("ai17")) {
+                let val17 = params.get("ai17");
+                document.getElementById("ai17").value = val17.includes("-") ? val17 : converterDataParaInput(val17);
+                hasParam = true;
+            }
+            if (params.has("ai10")) {
+                document.getElementById("ai10").value = params.get("ai10");
+                hasParam = true;
+            }
+            if (params.has("ai90")) {
+                document.getElementById("ai90").value = params.get("ai90");
+                hasParam = true;
+            }
+            if (params.has("ai240")) {
+                document.getElementById("ai240").value = params.get("ai240");
+                hasParam = true;
+            }
+            if (params.has("ai11")) {
+                let val11 = params.get("ai11");
+                document.getElementById("ai11").value = val11.includes("-") ? val11 : converterDataParaInput(val11);
+                hasParam = true;
+            }
+            if (params.has("ai21")) {
+                document.getElementById("ai21").value = params.get("ai21");
+                hasParam = true;
+            }
+
+            // Dispara a geração se houver parâmetros na URL
+            if (hasParam) {
+                gerar();
+            }
+        });
     </script>
 </body>
 </html>
